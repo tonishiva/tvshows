@@ -24,6 +24,7 @@ const trailer = document.getElementById('trailer');
 const headTrailer = document.getElementById('head-trailer');
 let paginationContext = '';
 let currentPage = 1;
+let lastPage;
 
 
 
@@ -100,11 +101,20 @@ const DBService = class {
                 return this.getData(this.newEpisodesTodayUrl + `&page=${page}`);
             case 'newEpisodesWeek':
                 return this.getData(this.newEpisodesWeekUrl + `&page=${page}`);
+            case 'trandingWeek':
+                return this.getData(this.trandingUrl + `&page=${page}`)
         }
     }
 
     getVideo = id => {
-        return this.getData(`${API_URL}/tv/${id}/videos?api_key=${API_KEY}&language=ru-RU`)
+        return this.getData(`${API_URL}/tv/${id}/videos?api_key=${API_KEY}&language=ru-RU`);
+    }
+
+    getTranding = () => {
+        currentPage = 1;
+        paginationContext = 'trandingWeek';
+        this.trandingUrl = `${API_URL}/trending/tv/week?api_key=${API_KEY}`;
+        return this.getData(this.trandingUrl);
     }
 }
 
@@ -119,6 +129,10 @@ const renderCard = (response, target) => {
         return;
     }
     tvShowsHead.textContent = target ? target.textContent : 'Результат поиска';
+
+    if (paginationContext == 'trandingWeek') {
+        tvShowsHead.textContent = '';
+    }
 
     response.results.forEach(item => {
         const {
@@ -150,10 +164,14 @@ const renderCard = (response, target) => {
     });
 
     pagination.textContent = '';
+    lastPage = +response.total_pages;
 
     if (response.total_pages > 1) {
         let paginationArray = [];
         let filteredArray = [];
+        const paginationStart = `<li><a href="#" class="pages-start">В начало</a></li>`;
+        const paginationEnd = `<li><a href="#" class="pages-end">В конец</a></li>`;
+        let paginationBody = '';
         for (let i = 1; i <= response.total_pages; i++) {
             paginationArray.push(i);
         }
@@ -163,7 +181,8 @@ const renderCard = (response, target) => {
             filteredArray = paginationArray.filter(item => item <= 10);
         }
         filteredArray.forEach(item => {
-            pagination.innerHTML += `<li><a href="#" class="pages">${item}</a></li>`;
+            paginationBody += `<li><a href="#" class="pages">${item}</a></li>`;
+            pagination.innerHTML = paginationStart + paginationBody + paginationEnd;
         });
         let page = document.querySelectorAll('.pages');
         page.forEach(item => {
@@ -175,6 +194,8 @@ const renderCard = (response, target) => {
     }
 };
 
+tvShows.append(loading);
+dbService.getTranding().then(renderCard);
 
 searchForm.addEventListener('submit', event => {
     event.preventDefault();
@@ -351,5 +372,13 @@ pagination.addEventListener('click', event => {
         tvShows.append(loading);
         currentPage = +target.textContent;
         dbService.getNextPage(currentPage, paginationContext).then(renderCard);
-    };
+    } else if (target.classList.contains('pages-start')) {
+        tvShows.append(loading);
+        currentPage = 1;
+        dbService.getNextPage(currentPage, paginationContext).then(renderCard);
+    } else if (target.classList.contains('pages-end')) {
+        tvShows.append(loading);
+        currentPage = lastPage;
+        dbService.getNextPage(currentPage, paginationContext).then(renderCard);
+    }
 });
