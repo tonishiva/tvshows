@@ -37,7 +37,7 @@ const DBService = class {
         if (res.ok) {
             return res.json();
         } else {
-            throw new Error(`Не удалось получить данные с ${url}`);
+            throw new Error(`Couldn't get the data from ${url}`);
         }
     }
 
