@@ -52,39 +52,39 @@ const DBService = class {
     getSearchResults = (query) => {
         paginationContext = 'search';
         currentPage = 1;
-        this.searchUrl = `${API_URL}/search/tv?api_key=${API_KEY}&query=${query}&language=ru-RU`;
+        this.searchUrl = `${API_URL}/search/tv?api_key=${API_KEY}&query=${query}&language=en-EN`;
         return this.getData(this.searchUrl);
     }
 
     getTvShow = (id) => {
-        return this.getData(`${API_URL}/tv/${id}?api_key=${API_KEY}&language=ru-RU`);
+        return this.getData(`${API_URL}/tv/${id}?api_key=${API_KEY}&language=en-EN`);
     }
 
     getTopRated = () => {
         currentPage = 1;
         paginationContext = 'topResults';
-        this.topRatedUrl = `${API_URL}/tv/top_rated?api_key=${API_KEY}&language=ru-RU`;
+        this.topRatedUrl = `${API_URL}/tv/top_rated?api_key=${API_KEY}&language=en-EN`;
         return this.getData(this.topRatedUrl);
     }
 
     getPopular = () => {
         currentPage = 1;
         paginationContext = 'popular';
-        this.popularUrl = `${API_URL}/tv/popular?api_key=${API_KEY}&language=ru-RU`;
+        this.popularUrl = `${API_URL}/tv/popular?api_key=${API_KEY}&language=en-EN`;
         return this.getData(this.popularUrl);
     }
 
     getNewEpisodeToday = () => {
         currentPage = 1;
         paginationContext = 'newEpisodesToday';
-        this.newEpisodesTodayUrl = `${API_URL}/tv/airing_today?api_key=${API_KEY}&language=ru-RU`;
+        this.newEpisodesTodayUrl = `${API_URL}/tv/airing_today?api_key=${API_KEY}&language=en-EN`;
         return this.getData(this.newEpisodesTodayUrl);
     }
 
     getNewEpisodesWeek = () => {
         currentPage = 1;
         paginationContext = 'newEpisodesWeek';
-        this.newEpisodesWeekUrl = `${API_URL}/tv/on_the_air?api_key=${API_KEY}&language=ru-RU`
+        this.newEpisodesWeekUrl = `${API_URL}/tv/on_the_air?api_key=${API_KEY}&language=en-EN`
         return this.getData(this.newEpisodesWeekUrl);
     }
 
@@ -107,7 +107,7 @@ const DBService = class {
     }
 
     getVideo = id => {
-        return this.getData(`${API_URL}/tv/${id}/videos?api_key=${API_KEY}&language=ru-RU`);
+        return this.getData(`${API_URL}/tv/${id}/videos?api_key=${API_KEY}&language=en-EN`);
     }
 
     getTranding = () => {
@@ -125,10 +125,10 @@ const renderCard = (response, target) => {
 
     if (!response.total_results) {
         loading.remove();
-        tvShowsHead.textContent = 'К сожалению, по вашему запросу ничего не найдено...';
+        tvShowsHead.textContent = 'Unfortunately there are no results matching your request...';
         return;
     }
-    tvShowsHead.textContent = target ? target.textContent : 'Результат поиска';
+    tvShowsHead.textContent = target ? target.textContent : 'Search results';
 
     if (paginationContext == 'trandingWeek') {
         tvShowsHead.textContent = '';
@@ -169,8 +169,8 @@ const renderCard = (response, target) => {
     if (response.total_pages > 1) {
         let paginationArray = [];
         let filteredArray = [];
-        const paginationStart = `<li><a href="#" class="pages-start">В начало</a></li>`;
-        const paginationEnd = `<li><a href="#" class="pages-end">В конец</a></li>`;
+        const paginationStart = `<li><a href="#" class="pages-start"><<</a></li>`;
+        const paginationEnd = `<li><a href="#" class="pages-end">>></a></li>`;
         let paginationBody = '';
         for (let i = 1; i <= response.total_pages; i++) {
             paginationArray.push(i);
@@ -317,8 +317,8 @@ tvShowList.addEventListener('click', event => {
                         const trailerItem = document.createElement('li');
                         trailerItem.innerHTML = `
                         <iframe 
-                            width="400" 
-                            height="300" 
+                            width="534" 
+                            height="300.38" 
                             src="https://www.youtube.com/embed/${item.key}" 
                             frameborder="0" 
                             allowfullscreen>
