@@ -317,8 +317,8 @@ tvShowList.addEventListener('click', event => {
                         const trailerItem = document.createElement('li');
                         trailerItem.innerHTML = `
                         <iframe 
-                            width="534" 
-                            height="300.38" 
+                            width="444.44" 
+                            height="250" 
                             src="https://www.youtube.com/embed/${item.key}" 
                             frameborder="0" 
                             allowfullscreen>
